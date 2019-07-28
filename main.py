@@ -8,10 +8,14 @@ from env.Ordering import WareHouse
 
 import pandas as pd
 
-
-
 df = pd.read_csv("data/orders.csv")
 
-print(df.head())
-print(len(df.columns))
+env = DummyVecEnv([lambda: WareHouse(df)])
 
+model = PPO2(MlpPolicy, env, verbose=1)
+model.learn(total_timesteps=2000)
+
+for i in range(2000):
+    action, _states = model.predict(obs)
+    obs, rewards, done, info = env.step(action)
+    env.render()
