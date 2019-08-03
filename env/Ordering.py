@@ -5,7 +5,7 @@ import numpy as np
 MAX_ORDER_SIZE = 40000
 INITAL_AMOUNT = 200
 MAX_WAREHOUSE_SPACE = 400000
-FRAME_SIZE = 7
+FRAME_SIZE = 5
 
 
 class WareHouse(gym.Env):
@@ -25,32 +25,41 @@ class WareHouse(gym.Env):
         self.observation_space = gym.spaces.Box(
             # low=(np.array([0]*self.number_of_products)), high=np.array([MAX_WAREHOUSE_SPACE]*self.number_of_products),
             low=0, high=MAX_WAREHOUSE_SPACE,
-            shape=(self.number_of_products+1,), dtype=np.int64
+            shape=(FRAME_SIZE, self.number_of_products), dtype=np.int64
         )
 
         self.current_step = 0
 
-        self.ware_amount = 0
+        self.ware_amount = [0, 0]
 
     def _next_observation(self):
         frame = np.array([self.df.loc[self.current_step: self.current_step+FRAME_SIZE-1, column] for column in self.df.columns[1:]])
 
-        # obs = np.append(frame)
-        obs = self.df.loc[self.current_step]
+        frame = frame.reshape((FRAME_SIZE, self.number_of_products))
 
-        self.ware_amount -= self.df.loc[self.current_step]
+        # frame = frame.item()
 
+        # obs = np.append(frame, [self.ware_amount])
+        # obs = self.df.loc[self.current_step]
 
-        return obs
+        print(self.df.loc[self.current_step])
+
+        self.ware_amount -= self.df.loc[self.current_step, self.df.columns[1:]]
+
+        # return np.array(self.ware_amount, obs)
+        return frame
 
     def _take_action(self, action):
 
-        action_type = action[0]
-        amount = action[1]
+        ware = int(action[0]/MAX_ORDER_SIZE)
+        amount_to_order = action[1]
 
-        if action_type == 0:
-            # Boy good 1
-            self.ware_amount += amount
+        self.ware_amount[ware] += amount_to_order
+        # amount = action[1]
+
+        # if action_type == 0:
+        #     Boy good 1
+            # self.ware_amount += amount
 
     def step(self, action):
 
@@ -60,9 +69,13 @@ class WareHouse(gym.Env):
 
         self.current_step += 1
 
-        reward = 100 - self.ware_amount
+        reward = 100 - sum(self.ware_amount)
 
-        done = self.ware_amount <= 0
+        print("reward", reward)
+
+        done = sum(self.ware_amount) <= 0
+
+        print("done", done)
 
         obs = self._next_observation()
 
@@ -71,16 +84,18 @@ class WareHouse(gym.Env):
     def reset(self):
 
         self.ware_amount = INITAL_AMOUNT
+        self.current_step = 0
 
         return self._next_observation()
 
 
-
 if __name__ == "__main__":
     print(np.array([0]*2))
-    wh = WareHouse(pd.read_csv("../data/orders.csv"))
+    wh = WareHouse(pd.read_csv("../data/orders2.csv"))
 
     print("action space", wh.action_space)
-    print("obesrvation space",wh.observation_space)
+    print("observation space", wh.observation_space)
 
-    print(wh._next_observation())
+    print("step", wh.step([0,0]))
+
+    print("next observation", wh._next_observation())
