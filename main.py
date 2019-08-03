@@ -13,7 +13,7 @@ df = pd.read_csv("data/orders2.csv")
 env = DummyVecEnv([lambda: WareHouse(df)])
 
 model = PPO2(MlpPolicy, env, verbose=1)
-model.learn(total_timesteps=2000)
+model.learn(total_timesteps=10000)
 
 obs = env.reset()
 for i in range(2000):

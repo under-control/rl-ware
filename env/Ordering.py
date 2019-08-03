@@ -67,11 +67,17 @@ class WareHouse(gym.Env):
 
         self.current_step += 1
 
-        reward = 1000 - sum(self.ware_amount)
+        reward = 3000 - sum(self.ware_amount)
 
         self.episode_reward += reward
 
         done = sum(self.ware_amount) <= 0
+
+        if done:
+            reward -= 100000
+
+        if self.current_step > 1000:
+            done = True
 
         # print("done", done)
 
@@ -91,7 +97,6 @@ class WareHouse(gym.Env):
 
         print("Step", self.current_step)
         print("Episode reward", self.episode_reward)
-
 
 
 if __name__ == "__main__":
