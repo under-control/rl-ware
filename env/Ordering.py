@@ -3,13 +3,13 @@ import pandas as pd
 import numpy as np
 
 MAX_ORDER_SIZE = 40000
-INITAL_AMOUNT = 200
+INITAL_AMOUNT = 2000
 MAX_WAREHOUSE_SPACE = 400000
 FRAME_SIZE = 5
 
 
 class WareHouse(gym.Env):
-    """ Warehouse management enviroment based on Open AI gym environments """
+    """ Warehouse management environment based on Open AI gym environments """
 
     def __init__(self, df):
         super(WareHouse, self).__init__()
@@ -30,6 +30,8 @@ class WareHouse(gym.Env):
 
         self.current_step = 0
 
+        self.episode_reward = 0
+
         self.ware_amount = [0, 0]
 
     def _next_observation(self):
@@ -41,8 +43,6 @@ class WareHouse(gym.Env):
 
         # obs = np.append(frame, [self.ware_amount])
         # obs = self.df.loc[self.current_step]
-
-        print(self.df.loc[self.current_step])
 
         self.ware_amount -= self.df.loc[self.current_step, self.df.columns[1:]]
 
@@ -63,19 +63,17 @@ class WareHouse(gym.Env):
 
     def step(self, action):
 
-        print(action)
-
         self._take_action(action)
 
         self.current_step += 1
 
-        reward = 100 - sum(self.ware_amount)
+        reward = 1000 - sum(self.ware_amount)
 
-        print("reward", reward)
+        self.episode_reward += reward
 
         done = sum(self.ware_amount) <= 0
 
-        print("done", done)
+        # print("done", done)
 
         obs = self._next_observation()
 
@@ -85,8 +83,15 @@ class WareHouse(gym.Env):
 
         self.ware_amount = INITAL_AMOUNT
         self.current_step = 0
+        self.episode_reward = 0
 
         return self._next_observation()
+
+    def render(self, mode='human'):
+
+        print("Step", self.current_step)
+        print("Episode reward", self.episode_reward)
+
 
 
 if __name__ == "__main__":
