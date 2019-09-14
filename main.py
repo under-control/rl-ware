@@ -12,8 +12,8 @@ df = pd.read_csv("data/orders2.csv")
 
 env = DummyVecEnv([lambda: WareHouse(df)])
 
-model = PPO2(MlpPolicy, env, verbose=1)
-model.learn(total_timesteps=10000)
+model = PPO2(MlpPolicy, env, verbose=1, tensorboard_log="/home/king/Desktop/exp/warehouse/")
+model.learn(total_timesteps=100000)
 
 obs = env.reset()
 for i in range(2000):

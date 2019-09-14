@@ -67,14 +67,15 @@ class WareHouse(gym.Env):
 
         self.current_step += 1
 
-        reward = 3000 - sum(self.ware_amount)
+        reward = 30000 - sum(self.ware_amount)
 
         self.episode_reward += reward
 
-        done = sum(self.ware_amount) <= 0
+        # done = sum(self.ware_amount) <= 0
+        done = all(i < 0 for i in self.ware_amount)
 
         if done:
-            reward -= 100000
+            reward -= 1000
 
         if self.current_step > 1000:
             done = True
@@ -109,3 +110,5 @@ if __name__ == "__main__":
     print("step", wh.step([0,0]))
 
     print("next observation", wh._next_observation())
+
+    print(wh.number_of_products)
