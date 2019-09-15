@@ -14,11 +14,10 @@ n_cpu = 12
 envs = DummyVecEnv([lambda: WareHouse(df) for i in range(n_cpu)])
 
 model = PPO2(MlpPolicy, envs, verbose=1, tensorboard_log="/home/king/Desktop/exp/warehouse/")
-model.learn(total_timesteps=100000)
+model.learn(total_timesteps=1000000)
 
-env = envs[0]
-obs = env.reset()
+obs = envs.reset()
 for i in range(2000):
     action, _states = model.predict(obs)
-    obs, rewards, done, info = env.step(action)
-    env.render()
+    obs, rewards, done, info = envs.step(action)
+    envs.render()

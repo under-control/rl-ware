@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 MAX_ORDER_SIZE = 40000
-INITAL_AMOUNT = 2000
+INITAL_AMOUNT = 100
 MAX_WAREHOUSE_SPACE = 400000
 FRAME_SIZE = 5
 
@@ -39,6 +39,8 @@ class WareHouse(gym.Env):
 
         frame = frame.reshape((FRAME_SIZE, self.number_of_products))
 
+        print("frame", frame, end=" | ")
+
         # frame = frame.item()
 
         # obs = np.append(frame, [self.ware_amount])
@@ -67,22 +69,20 @@ class WareHouse(gym.Env):
 
         self.current_step += 1
 
-        reward = 3000 - sum(self.ware_amount)
-
-        self.episode_reward += reward
+        reward = 600 - sum(self.ware_amount)
 
         # done = sum(self.ware_amount) <= 0
-        lack = all(i < 0 for i in self.ware_amount)
+        lack = any(i < 0 for i in self.ware_amount)
 
-        print(self.ware_amount[0], self.ware_amount[1],  end=" | ")
+        print(lack, self.ware_amount[0], self.ware_amount[1],  end=" | ")
 
         if lack:
             for i in self.ware_amount:
                 if i < 0:
                     reward += 10 * i
 
-        if any(i < -1000 for i in self.ware_amount):
-            reward -= 10000
+        if any(i < -100 for i in self.ware_amount):
+            reward -= 1000
             done = True
         else:
             done = False
@@ -92,6 +92,8 @@ class WareHouse(gym.Env):
             reward += 1000
 
         # print("done", done)
+
+        self.episode_reward += reward
 
         obs = self._next_observation()
 
