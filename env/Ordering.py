@@ -47,7 +47,7 @@ class WareHouse(gym.Env):
         self.ware_amount -= self.df.loc[self.current_step, self.df.columns[1:]]
 
         # return np.array(self.ware_amount, obs)
-        return frame
+        return frame  # self.ware_amount
 
     def _take_action(self, action):
 
@@ -67,18 +67,29 @@ class WareHouse(gym.Env):
 
         self.current_step += 1
 
-        reward = 30000 - sum(self.ware_amount)
+        reward = 3000 - sum(self.ware_amount)
 
         self.episode_reward += reward
 
         # done = sum(self.ware_amount) <= 0
-        done = all(i < 0 for i in self.ware_amount)
+        lack = all(i < 0 for i in self.ware_amount)
 
-        if done:
-            reward -= 1000
+        print(self.ware_amount[0], self.ware_amount[1],  end=" | ")
+
+        if lack:
+            for i in self.ware_amount:
+                if i < 0:
+                    reward += 10 * i
+
+        if any(i < -1000 for i in self.ware_amount):
+            reward -= 10000
+            done = True
+        else:
+            done = False
 
         if self.current_step > 1000:
             done = True
+            reward += 1000
 
         # print("done", done)
 
@@ -88,7 +99,8 @@ class WareHouse(gym.Env):
 
     def reset(self):
 
-        self.ware_amount = INITAL_AMOUNT
+        self.ware_amount[0] = INITAL_AMOUNT
+        self.ware_amount[1] = INITAL_AMOUNT
         self.current_step = 0
         self.episode_reward = 0
 
