@@ -2,9 +2,9 @@ import gym
 import pandas as pd
 import numpy as np
 
-MAX_ORDER_SIZE = 40000
+MAX_ORDER_SIZE = 400
 INITAL_AMOUNT = 100
-MAX_WAREHOUSE_SPACE = 400000
+MAX_WAREHOUSE_SPACE = 4000
 FRAME_SIZE = 5
 
 
