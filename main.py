@@ -11,10 +11,10 @@ import tensorflow as tf
 
 df = pd.read_csv("data/orders2.csv")
 
-n_cpu = 24
+n_cpu = 12
 envs = DummyVecEnv([lambda: WareHouse(df) for i in range(n_cpu)])
 
-model = PPO2(MlpPolicy, envs, verbose=1, tensorboard_log="/home/king/Desktop/exp2/warehouse/")
+model = PPO2(MlpPolicy, envs, verbose=1, tensorboard_log="/home/king/Desktop/exp/warehouse/")
 model.is_tb_set = False
 
 
@@ -37,7 +37,7 @@ def callback(locals_, globals_):
     return True
 
 
-model.learn(total_timesteps=10000000, callback=callback)
+model.learn(total_timesteps=20000000, callback=callback)
 
 obs = envs.reset()
 for i in range(2000):

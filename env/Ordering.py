@@ -69,17 +69,15 @@ class WareHouse(gym.Env):
 
         self.current_step += 1
 
-        reward = 600 - sum(self.ware_amount)
+        reward = 1000 - sum(self.ware_amount)
 
         # done = sum(self.ware_amount) <= 0
         lack = any(i < 0 for i in self.ware_amount)
 
-        print(lack, self.ware_amount[0], self.ware_amount[1],  end=" | ")
-
         if lack:
             for i in self.ware_amount:
                 if i < 0:
-                    reward += 10 * i
+                    reward += 20 * i
 
         if any(i < -100 for i in self.ware_amount):
             reward -= 1000
@@ -90,8 +88,6 @@ class WareHouse(gym.Env):
         if self.current_step > 1000:
             done = True
             reward += 1000
-
-        # print("done", done)
 
         self.episode_reward += reward
 
