@@ -39,7 +39,7 @@ class WareHouse(gym.Env):
 
         frame = frame.reshape((FRAME_SIZE, self.number_of_products))
 
-        print("frame", frame, end=" | ")
+        # print("frame", frame, end=" | ")
 
         # frame = frame.item()
 
@@ -53,10 +53,11 @@ class WareHouse(gym.Env):
 
     def _take_action(self, action):
 
-        ware = int(action[0]/MAX_ORDER_SIZE)
-        amount_to_order = action[1]
-
-        self.ware_amount[ware] += amount_to_order
+        # ware = int(action[0]/MAX_ORDER_SIZE)
+        # amount_to_order = action[1]
+        #
+        # self.ware_amount[ware] += amount_to_order
+        self.ware_amount += action
         # amount = action[1]
 
         # if action_type == 0:
