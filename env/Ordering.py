@@ -57,7 +57,10 @@ class WareHouse(gym.Env):
         # amount_to_order = action[1]
         #
         # self.ware_amount[ware] += amount_to_order
-        self.ware_amount += action
+        # self.ware_amount += action
+
+        for i in range(self.number_of_products):
+            self.ware_amount[i] += action[i]
         # amount = action[1]
 
         # if action_type == 0:
@@ -70,7 +73,7 @@ class WareHouse(gym.Env):
 
         self.current_step += 1
 
-        reward = 1000 - sum(self.ware_amount)
+        reward = 800 - abs(self.ware_amount[0]) - abs(self.ware_amount[1])
 
         # done = sum(self.ware_amount) <= 0
         lack = any(i < 0 for i in self.ware_amount)
