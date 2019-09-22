@@ -2,14 +2,13 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-df = pd.DataFrame(np.random.randint(0,100, size=(5000, 2)), columns=["Produkt 1", "Produkt 2"])
+num_of_products = 2
+
+df = pd.DataFrame(np.random.randint(0, 100, size=(5000, num_of_products)), columns=["Produkt 1", "Produkt 2"])
 
 print(df.head())
 
-df.hist(bins=100)
+df.hist(bins=20, figsize=(9, 4), edgecolor='black', linewidth=1.5)
 plt.show()
 
-print(len(df))
-
-df.to_csv("../data/orders2.csv")
-
+df.to_csv("../data/orders" + str(num_of_products) + ".csv")
