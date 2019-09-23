@@ -40,6 +40,8 @@ class WareHouse(gym.Env):
 
         self.ware_amount -= self.df.loc[self.current_step, self.df.columns[1:]]
 
+        frame[0] = self.ware_amount
+
         return frame
 
     def _take_action(self, action):
