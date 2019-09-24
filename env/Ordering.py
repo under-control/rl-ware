@@ -19,7 +19,8 @@ class WareHouse(gym.Env):
         self.number_of_products = len(df.columns) - 1
 
         self.action_space = gym.spaces.Box(
-            low=(np.array([0]*self.number_of_products)), high=(np.array([MAX_ORDER_SIZE]*self.number_of_products))
+            low=(np.array([0]*self.number_of_products)),
+            high=(np.array([MAX_ORDER_SIZE]*self.number_of_products))
         )
 
         self.observation_space = gym.spaces.Box(
@@ -34,7 +35,9 @@ class WareHouse(gym.Env):
         self.ware_amount = [0] * self.number_of_products
 
     def _next_observation(self):
-        frame = np.array([self.df.loc[self.current_step: self.current_step+FRAME_SIZE-1, column] for column in self.df.columns[1:]])
+        frame = np.array(
+            [self.df.loc[self.current_step: self.current_step+FRAME_SIZE-1, column] for column in self.df.columns[1:]]
+        )
 
         frame = frame.reshape((FRAME_SIZE, self.number_of_products))
 
