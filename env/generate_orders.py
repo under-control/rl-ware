@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 
 num_of_products = 2
 
-df = pd.DataFrame(np.random.randint(0, 100, size=(5000, num_of_products)), columns=["Produkt 1", "Produkt 2"])
+df = pd.DataFrame(np.random.randint(0, 100, size=(5000, num_of_products)),
+                  columns=["Produkt " + str(i+1) for i in range(num_of_products)])
 
 print(df.head())
 

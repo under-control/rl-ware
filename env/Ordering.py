@@ -31,7 +31,7 @@ class WareHouse(gym.Env):
 
         self.episode_reward = 0
 
-        self.ware_amount = [0, 0]
+        self.ware_amount = [0] * self.number_of_products
 
     def _next_observation(self):
         frame = np.array([self.df.loc[self.current_step: self.current_step+FRAME_SIZE-1, column] for column in self.df.columns[1:]])
@@ -39,8 +39,6 @@ class WareHouse(gym.Env):
         frame = frame.reshape((FRAME_SIZE, self.number_of_products))
 
         self.ware_amount -= self.df.loc[self.current_step, self.df.columns[1:]]
-
-        frame[0] = self.ware_amount
 
         return frame
 
@@ -55,7 +53,10 @@ class WareHouse(gym.Env):
 
         self.current_step += 1
 
-        reward = 800 - abs(self.ware_amount[0]) - abs(self.ware_amount[1])
+        reward = 800
+
+        for i in range(self.number_of_products):
+            reward -= abs(self.ware_amount[i])
 
         lack = any(i < 0 for i in self.ware_amount)
 
@@ -82,8 +83,8 @@ class WareHouse(gym.Env):
 
     def reset(self):
 
-        self.ware_amount[0] = INITAL_AMOUNT
-        self.ware_amount[1] = INITAL_AMOUNT
+        for i in range(self.number_of_products):
+            self.ware_amount[i] = INITAL_AMOUNT
         self.current_step = 0
         self.episode_reward = 0
 
