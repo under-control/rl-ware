@@ -9,7 +9,7 @@ from env.Ordering import WareHouse
 import pandas as pd
 import tensorflow as tf
 
-df = pd.read_csv("data/orders2.csv")
+df = pd.read_csv("data/orders2n.csv")
 
 n_cpu = 12
 envs = DummyVecEnv([lambda: WareHouse(df) for i in range(n_cpu)])

@@ -56,7 +56,7 @@ class WareHouse(gym.Env):
 
         self.current_step += 1
 
-        reward = 800
+        reward = 200
 
         for i in range(self.number_of_products):
             reward -= abs(self.ware_amount[i])
